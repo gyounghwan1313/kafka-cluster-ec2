@@ -21,9 +21,9 @@
     x.x.x.x kafka-3
 
 ### 타임존 변경
-
+    sudo timedatectl set-timezone Asia/Seoul
 ### 4. Java 설치 
-   sudo yum install -y java-11-amazon-corretto.x86_64
+   sudo yum install -y java-11-amazon-corretto.x86_64 \
    java -version
 
 ### 5. kafka 다운로드 
@@ -43,22 +43,22 @@
     wget https://api.hub.confluent.io/api/plugins/confluentinc/kafka-connect-s3/versions/4.1.1/archive
     unzip archive
     mkdir -p /opt/kafka/plugins/kafka-connect-s3
-    sudo cp confluentinc-kafka-connect-s3-4.1.1/lib/* /opt/kafka/plugins/kafka-connect-s3/
+    cp confluentinc-kafka-connect-s3-4.1.1/lib/* /opt/kafka/plugins/kafka-connect-s3/
 
 ### Zookeeper dataDir 생성, myid에는 zookeeper 서버 번호(각 1,2,3)이 입력된 파일을 생성
-    mkdir -p /data/zookeeper
-    echo 1 > /data/zookeeper/myid
+    sudo mkdir -p /data/zookeeper
+    echo 1 > sudo /data/zookeeper/myid
 
 ### Zookeeper & Kafka 실행
-    /opt/kafka/bin/zookeeper-server-start.sh -daemon /opt/kafka/config/zookeeper.properties
-    /opt/kafka/bin/kafka-server-start.sh -daemon  /opt/kafka/config/server.properties
+    sudo /opt/kafka/bin/zookeeper-server-start.sh -daemon /opt/kafka/config/zookeeper.properties
+    sudo /opt/kafka/bin/kafka-server-start.sh -daemon  /opt/kafka/config/server.properties
 
 ### 토픽 생성
-    /opt/kafka/bin/kafka-topic.sh --bootstrap-server localhost:9092 --create --topic subway-arrival-topic --replication-factor 3 --partitions 3
+    /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:9092,kafka-2:9092,kafka-3:9092 --create --topic test-topic --replication-factor 3 --partitions 3
 
 ### aws 접속 정보 등록
     aws configure
 
 ### kafka s3 sink connector 실행
-    ./bin/connect-distributed.sh -daemon ./config/connect.properties
+    ./bin/connect-distributed.sh -daemon ./config/s3-sink-connect-distributed.properties
 
