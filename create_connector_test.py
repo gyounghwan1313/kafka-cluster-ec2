@@ -4,7 +4,7 @@ import json
 
 s3_sink_connector = {"name": "test-s3-sink",
                      "config": {"connector.class": "io.confluent.connect.s3.S3SinkConnector",
-                                "tasks.max": 1,
+                                "tasks.max": 3,
                                 "topics": "test-topic",
                                 "s3.region": "ap-northeast-2",
                                 "s3.bucket.name": "test-bucket-2334",
@@ -23,6 +23,12 @@ s3_sink_connector = {"name": "test-s3-sink",
                                 }
                      }
 
-result = req.post(url=":8083/connectors",
+result = req.post(url="http://:8083/connectors",
                   headers={"Content-Type": "application/json"}, data=json.dumps(s3_sink_connector))
 print(result.json())
+
+result = req.get(url="http://:8083/connectors/test-s3-sink/status")
+print(result.json())
+print(result.json()['tasks'][0])
+print(result.json()['tasks'][1])
+print(result.json()['tasks'][2])

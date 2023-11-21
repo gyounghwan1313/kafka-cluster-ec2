@@ -60,5 +60,5 @@
     aws configure
 
 ### kafka s3 sink connector 실행
-    ./bin/connect-distributed.sh -daemon ./config/s3-sink-connect-distributed.properties
+    sudo ./bin/connect-distributed.sh -daemon ./config/s3-sink-connector-distributed.properties
 
